@@ -9,7 +9,7 @@ NB:
 Git clone / cd to repo
 Mkdir build / cd build
 cmake .. -B_builds -GXcode -DCMAKE_SYSTEM_NAME=iOS  -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0  -DCMAKE_INSTALL_PREFIX=`pwd`/_install -DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO -DBUILD_SHARED_LIBS=NO -Dtranscoder=iconv
-xcodebuild -project _builds/xerces-c.xcodeproj -scheme "xerces-c Release" -sdk iphoneos14.5  
+xcodebuild -project _builds/xerces-c.xcodeproj -scheme "xerces-c" -configuration Release -sdk iphoneos14.5  
 xcodebuild -project _builds/xerces-c.xcodeproj -scheme "xerces-c" -configuration Release -sdk iphonesimulator -arch x86_64
 cd _builds
 env PLATFORM_NAME=iphoneos "SUPPORTED_PLATFORMS=iphoneos iphonesimulator" cmake -DCMAKE_BINARY_DIR=`pwd` -DEFFECTIVE_PLATFORM_NAME=-iphoneos -DCMAKE_INSTALL_CONFIG_NAME=Release -DCMAKE_INSTALL_PREFIX=/usr/local -P cmake_install.cmake
