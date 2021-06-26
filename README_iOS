@@ -1,5 +1,16 @@
-Run this CMake command from a build subfolder to build static libs for iOS device and simulator targets:
+NB:  
+- doc, tests, and samples subdirectories were commented out in CMakeLists.txt to enable building for iOS
+- Could probably figure out how to get cmake to do a build install and save a couple of steps,  but the following works
+- Unknown why Xcode build directories are created in two places
+- The libs are built in _builds/src/Release-iphonexxx
+- The second cmake command installs the device target lib to /usr/local/lib and installs the headers to /usr/local/include
 
-cmake .. -B_builds -GXcode -DCMAKE_SYSTEM_NAME=iOS  "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0  -DCMAKE_INSTALL_PREFIX=`pwd`/_install -DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO -DCMAKE_IOS_INSTALL_COMBINED=YES  -DBUILD_SHARED_LIBS=NO -Dtranscoder=iconv
 
-
+Git clone / cd to repo
+Mkdir build / cd build
+cmake .. -B_builds -GXcode -DCMAKE_SYSTEM_NAME=iOS  -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0  -DCMAKE_INSTALL_PREFIX=`pwd`/_install -DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO -DBUILD_SHARED_LIBS=NO -Dtranscoder=iconv
+xcodebuild -project _builds/xerces-c.xcodeproj -scheme "xerces-c Release" -sdk iphoneos14.5  
+xcodebuild -project _builds/xerces-c.xcodeproj -scheme "xerces-c" -configuration Release -sdk iphonesimulator -arch x86_64
+cd _builds
+env PLATFORM_NAME=iphoneos "SUPPORTED_PLATFORMS=iphoneos iphonesimulator" cmake -DCMAKE_BINARY_DIR=`pwd` -DEFFECTIVE_PLATFORM_NAME=-iphoneos -DCMAKE_INSTALL_CONFIG_NAME=Release -DCMAKE_INSTALL_PREFIX=/usr/local -P cmake_install.cmake
+xcodebuild -create-xcframework -library ./src/Release-iphoneos/libxerces-c.a -headers /usr/local/include/xercesc -library ./src/Release-iphonesimulator/libxerces-c.a -headers /usr/local/include/xercesc -output libxerces-c.xcframework
